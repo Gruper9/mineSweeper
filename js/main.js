@@ -114,13 +114,13 @@ function selectDificulty(elBtn) {
             gLevel.size = 16
             gLevel.numOfMines = 2
             break
-        case 'Intermidiet':
-            gLevel.size = 25
-            gLevel.numOfMines = 5
+        case 'Medium':
+            gLevel.size = 64
+            gLevel.numOfMines = 14
             break
         case 'Expert':
-            gLevel.size = 100
-            gLevel.numOfMines = 10
+            gLevel.size = 144
+            gLevel.numOfMines = 32
             break
         default:
             gLevel.size = 0
