@@ -41,6 +41,13 @@ function buildBoard() {
             }
         }
     }
+    placeMines(board)
+    setMinesNegsCount(board)
+    printBoard(board)
+    return board
+}
+//Done: place mines at random locations on the board
+function placeMines(board){
     var emptyCells = []
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
@@ -53,8 +60,6 @@ function buildBoard() {
         var randomCell = emptyCells.splice(getRandomInt(0, emptyCells.length), 1)[0]
         board[randomCell.i][randomCell.j].isMine = true
     }
-    setMinesNegsCount(board)
-    printBoard(board)
     return board
 }
 //Done:render the game board onto the HTML
