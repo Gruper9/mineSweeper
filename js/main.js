@@ -74,8 +74,9 @@ function renderBoard(board) {
 }
 
 function onCellClick(elCell, idx, jdx) {
+   
     if (!gGame.isOn || gBoard[idx][jdx].isShown) return
-
+   
     if (gBoard[idx][jdx].isMine) {
         gameOver()
         elCell.style.backgroundColor = 'red';
@@ -86,18 +87,17 @@ function onCellClick(elCell, idx, jdx) {
 }
 
 function expandShown(elCell, idx, jdx) {
-    if (gBoard[idx][jdx].isMine || gBoard[idx][jdx].isShown) return
 
+    if (gBoard[idx][jdx].isMine || gBoard[idx][jdx].isShown) return
     gBoard[idx][jdx].isShown = true
     gGame.shownCount++
     elCell.setAttribute('disabled', '')
     elCell.innerText = gBoard[idx][jdx].minesAroundCount
-
     if (gBoard[idx][jdx].minesAroundCount === 0) {
-        for (var i = idx - 1; i <= idx + 1; i++) {
-            if (i < 0 || i > gBoard.length) continue
-            for (var j = jdx - 1; j <= jdx + 1; j++) {
-                if (j < 0 || j > gBoard.length) continue
+        for (var i = idx - 1; i < idx + 1; i++) {
+            if (i < 0 || i > gBoard[i].length) continue
+            for (var j = jdx - 1; j < jdx + 1; j++) {
+                if (j < 0 || j > gBoard[i].length) continue
                 const negCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
                 onCellClick(negCell, i, j)
             }
