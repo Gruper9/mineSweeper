@@ -1,0 +1,89 @@
+body{
+    margin-top: 100px;
+    background: rgb(201, 201, 201);
+}
+.mine-sweeper {
+   padding: 20px;
+    width: 300px;
+    height:350px;
+    margin: auto;
+    background-color: grey;
+    border: rgb(72, 72, 72) 1px solid;
+    border-radius: 8px;
+    box-shadow: 4px 6px 14px 0;
+
+}
+h1{
+    margin-left: 16%;
+    font-size: 35px;
+    color: rgb(184, 184, 184);
+}
+.dificulty{
+margin-left:10%;
+}
+.dificulty button{
+    margin-left: 3px;
+    background: rgb(155, 155, 155);
+    border-radius: 9px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+    border: 0px;
+}
+.dificulty button:hover{
+    background: rgb(69, 69, 69);
+    color:white;
+    
+   
+}
+.game {
+    margin-top: 10px;
+    display: grid;
+    justify-content: center;
+
+}
+
+.game button{
+    background: rgb(177, 177, 177);
+    border: 1px grey solid;
+    border-radius: 3px;
+    height: 20px;
+    width: 20px;
+}
+.game button:hover{
+    background: rgb(199, 198, 198);
+}
+.game button:disabled{
+    background: rgb(255, 254, 254);
+    border:0px;
+    border-radius: 0px;
+
+}
+
+.is-mine {
+    font-size: 20px;
+}
+
+.is-1 {
+    color: blue;
+}
+
+.is-2 {
+    color: red;
+}
+
+.is-3 {
+    color: green;
+}
+
+.is-4 {
+    color: blueviolet;
+}
+
+.is-5 {
+    color: darkblue;
+}
+
+.fail{
+    background: red;
+}
