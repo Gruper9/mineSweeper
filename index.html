@@ -5,13 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.cdnfonts.com/css/led-digital-7" rel="stylesheet">
     <title>MineSweeper</title>
 </head>
 
 <body onload="onInit()">
     <div class="mine-sweeper">
+
         <H1>Mine Sweeper</H1>
-        
+
+        <span class="smily" onclick="onInit()">😴</span>
+
         <div class="dificulty">
             <button onclick="selectDificulty(this)">Begginer</button>
             <button onclick="selectDificulty(this)">Medium</button>
@@ -19,12 +23,24 @@
 
         </div>
 
+        <div class="hints">
+            <button onclick="getHint(this)">💡</button>
+            <button onclick="getHint(this)">💡</button>
+            <button onclick="getHint(this)">💡</button>
+        </div>
+
+
         <div class="game">
 
-
         </div>
+
         <span class="endgame"></span>
+
+        <div class="timer ">Timer: <span class="time hide"></span></div> <div class="life ">lives: <span class="livecount"></span></div>
     </div>
+
+
+
     <script src="js/util.js"></script>
     <script src="js/main.js"></script>
 </body>
