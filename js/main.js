@@ -4,7 +4,7 @@
 const gLevel = {
     size: 0,
     numOfMines: 0,
-    liveCount:0
+    liveCount: 0
 }
 const gGame = {
     isOn: false,
@@ -84,20 +84,32 @@ function renderBoard(board) {
     var strHTML = ''
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board.length; j++) {
-            var classlist = (board[i][j].isMine) ? `is-mine` : `is-${board[i][j].minesAroundCount}`
-            strHTML += `<button data-i="${i}" data-j="${j}" class="${classlist}" oncontextmenu="onCellMarked(this)" onclick="onCellClick(this, ${i}, ${j})" "></button> `
+            // var classlist = (board[i][j].isMine) ? `is-mine` : `is-${board[i][j].minesAroundCount}`
+            strHTML += `<button data-i="${i}" data-j="${j}" class="" oncontextmenu="onCellMarked(this)" onclick="onCellClick(this, ${i}, ${j})" "></button> `
         }
     }
     var elGame = document.querySelector('.game')
     elGame.innerHTML = strHTML
+    createClass(board)
     elGame.style.gridTemplateColumns = `repeat(${Math.sqrt(gLevel.size)}, 0fr)`
 }
+//Done: create and add class to every cell
+function createClass(board) {
+    for (var i = 0; i < board.length; i++) {
+        for (var j = 0; j < board.length; j++) {
+            var classlist = (board[i][j].isMine) ? `is-mine` : `is-${board[i][j].minesAroundCount}`
+            var cell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
 
+            cell.className=classlist
+        }
+    }
+
+}
 function onCellClick(elCell, idx, jdx) {
     if (!gGame.isOn) return
-    if (!gGame.markedCount && !gGame.shownCount) {
-        gTimerInterval = setInterval(gameRun, 1000)
-    }
+
+    if (!gGame.markedCount && !gGame.shownCount)
+        firstClick(elCell)
 
     if (gBoard[idx][jdx].isMine) {
         gotHit(elCell)
@@ -114,7 +126,23 @@ function onCellClick(elCell, idx, jdx) {
     }
 
 }
+//Done: start timer interval, deal with first click on mine
+function firstClick(elCell) {
+    gTimerInterval = setInterval(gameRun, 1000)
 
+    var pos = elCell.dataset
+    console.log(pos);
+    if (gBoard[pos.i][pos.j].isMine) {
+        var cell = getNoneMineCell(gBoard)
+
+        gBoard[pos.i][pos.j].isMine = false
+        gBoard[cell.i][cell.j].isMine = true
+        setMinesNegsCount(gBoard)
+        createClass(gBoard)
+        printBoard(gBoard)
+    }
+
+}
 function gameRun() {
     var elTimer = document.querySelector('.time')
     elTimer.classList.remove('hide')

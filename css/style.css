@@ -97,12 +97,15 @@ h1 {
     color: rgb(61, 61, 61);
     font-weight: bold;
 }
-
 .is-mine {
     font-size: 20px;
     padding: 3px;
 }
 
+.is-0 {
+    color: grey;
+    text-align: center;
+}
 .is-1 {
     color: blue;
     text-align: center;
@@ -127,6 +130,7 @@ h1 {
     color: darkblue;
     text-align: center;
 }
+
 
 .fail {
     background: red;
