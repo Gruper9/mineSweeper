@@ -167,3 +167,6 @@ cursor: pointer;
 .hide{
     display: none;
 }
+button.is-safe{
+    background-color: yellow;
+}
