@@ -57,7 +57,7 @@ h1 {
     height: 20px;
     width: 20px;
     text-align: start;
-    padding: 3px;
+    
 }
 
 .game button:hover {
@@ -100,26 +100,32 @@ h1 {
 
 .is-mine {
     font-size: 20px;
+    padding: 3px;
 }
 
 .is-1 {
     color: blue;
+    text-align: center;
 }
 
 .is-2 {
     color: red;
+    text-align: center;
 }
 
 .is-3 {
     color: green;
+    text-align: center;
 }
 
 .is-4 {
     color: blueviolet;
+    text-align: center;
 }
 
 .is-5 {
     color: darkblue;
+    text-align: center;
 }
 
 .fail {
