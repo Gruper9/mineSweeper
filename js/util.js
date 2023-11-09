@@ -7,9 +7,8 @@ function getRandomInt(min, max) {
 }
 
 
-function countNegs(mat,cell){
+function countNegMines(mat,cell){
     var count = 0
-
     for (var i = cell.i - 1; i <= cell.i + 1; i++) {
         if (i < 0 || i > mat.length-1) continue
         for (var j = cell.j - 1; j <= cell.j + 1; j++) {

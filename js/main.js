@@ -11,21 +11,23 @@ const gGame = {
     markedCount: 0,
     secsPassed: 0
 }
+var gIsWin = false
 var gBoard = []
 
 function onInit() {
-    var elGame = document.querySelector('.game')
-    elGame.addEventListener("contextmenu", e => { e.preventDefault() })
+    var elSpan = document.querySelector('.endgame')
+    elSpan.innerText = ''
+
     gGame.shownCount = 0
     gGame.markedCount = 0
     gGame.isOn = true
+    gIsWin = false
 
     gBoard = buildBoard()
     renderBoard(gBoard)
-
 }
 
-//DONE:create game board on difficulty level. place a number of mines according to dificulty at random positions and set mine negs num at correct cells
+//DONE:create game board on difficulty level. 
 function buildBoard() {
     if (gLevel.size === 0) return
     var boardSize = Math.sqrt(gLevel.size)
@@ -46,8 +48,8 @@ function buildBoard() {
     printBoard(board)
     return board
 }
-//Done: place mines at random locations on the board
-function placeMines(board){
+//Done: return location {i,j} of random cell that is not a mine on the board
+function getNoneMineCell(board) {
     var emptyCells = []
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
@@ -56,9 +58,14 @@ function placeMines(board){
             }
         }
     }
+    var randomCell = emptyCells.splice(getRandomInt(0, emptyCells.length), 1)[0]
+    return randomCell
+}
+//Done: place mines at random locations on the board
+function placeMines(board) {
     for (var i = 0; i < gLevel.numOfMines; i++) {
-        var randomCell = emptyCells.splice(getRandomInt(0, emptyCells.length), 1)[0]
-        board[randomCell.i][randomCell.j].isMine = true
+        var cell = getNoneMineCell(board)
+        board[cell.i][cell.j].isMine = true
     }
     return board
 }
@@ -68,9 +75,8 @@ function renderBoard(board) {
     var strHTML = ''
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board.length; j++) {
-            if (board[i][j].isMine) var classlist = `is-mine`
-            else var classlist = `is-${board[i][j].minesAroundCount}`
-            strHTML += `<button data-i="${i}" data-j="${j}" class="${classlist}"  onclick="onCellClick(this, ${i}, ${j})" "></button> `
+            var classlist = (board[i][j].isMine) ? `is-mine` : `is-${board[i][j].minesAroundCount}`
+            strHTML += `<button data-i="${i}" data-j="${j}" class="${classlist}" oncontextmenu="onCellMarked(this)" onclick="onCellClick(this, ${i}, ${j})" "></button> `
         }
     }
     var elGame = document.querySelector('.game')
@@ -79,38 +85,41 @@ function renderBoard(board) {
 }
 
 function onCellClick(elCell, idx, jdx) {
-   
-    if (!gGame.isOn || gBoard[idx][jdx].isShown) return
-   
+    if (!gGame.isOn) return
+
     if (gBoard[idx][jdx].isMine) {
-        gameOver()
+        gameOver(gIsWin)
         elCell.style.backgroundColor = 'red';
     }
 
     expandShown(elCell, idx, jdx)
 
+    if (gGame.markedCount === gLevel.numOfMines || gGame.shownCount === (gLevel.size - gLevel.numOfMines)) {
+        gIsWin = true
+        gameOver(gIsWin)
+    }
+
 }
 
 function expandShown(elCell, idx, jdx) {
-    if (gBoard[idx][jdx].isMine || gBoard[idx][jdx].isShown) return
+    if (gBoard[idx][jdx].isMine || gBoard[idx][jdx].isShown || gBoard[idx][jdx].isMarked) return
 
     gBoard[idx][jdx].isShown = true
     gGame.shownCount++
     elCell.setAttribute('disabled', '')
     elCell.innerText = gBoard[idx][jdx].minesAroundCount
-    if (gBoard[idx][jdx].minesAroundCount === 0) {
-        for (var i = idx - 1; i <= idx + 1; i++) {
-            if (i < 0 || i > gBoard.length-1) continue
-            for (var j = jdx - 1; j <= jdx + 1; j++) {
-                if (j < 0 || j > gBoard[i].length-1) continue
-                const negCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
-                onCellClick(negCell, i, j)
-            }
+    if (gBoard[idx][jdx].minesAroundCount !== 0) return
+
+    for (var i = idx - 1; i <= idx + 1; i++) {
+        if (i < 0 || i > gBoard.length - 1) continue
+        for (var j = jdx - 1; j <= jdx + 1; j++) {
+            if (j < 0 || j > gBoard[i].length - 1) continue
+            const negCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
+            onCellClick(negCell, i, j)
         }
-
     }
-}
 
+}
 
 //DONE:set board size and number of mines according to dificulty
 function selectDificulty(elBtn) {
@@ -140,19 +149,31 @@ function selectDificulty(elBtn) {
 function setMinesNegsCount(board) {
     for (var i = 0; i < board.length; i++) {
         for (var j = 0; j < board[i].length; j++) {
-            if (!board[i][j].isMine) board[i][j].minesAroundCount = countNegs(board, { i, j })
+            if (!board[i][j].isMine) board[i][j].minesAroundCount = countNegMines(board, { i, j })
         }
     }
-
-
 }
-
+//Done:mark\unmark cell on rightclick
 function onCellMarked(elCell) {
+    event.preventDefault()
+    if (!gGame.isOn) return
+    var pos = elCell.dataset
+    if (gBoard[pos.i][pos.j].isShown) return
 
-
-
+    if (!gBoard[pos.i][pos.j].isMarked) {
+        elCell.innerText = '🚩'
+        elCell.classList.add('marked')
+        gBoard[pos.i][pos.j].isMarked = true
+        if (gBoard[pos.i][pos.j].isMine) gGame.markedCount++
+    }
+    else {
+        elCell.innerText = ''
+        elCell.classList.remove('marked')
+        gBoard[pos.i][pos.j].isMarked = false
+        if (gBoard[pos.i][pos.j].isMine) gGame.markedCount--
+    }
 }
-
+//Done: print board layout to console
 function printBoard(board) {
     const mat = []
     for (var i = 0; i < board.length; i++) {
@@ -164,9 +185,15 @@ function printBoard(board) {
     console.table(mat)
 }
 
-function gameOver() {
-    showMines(gBoard)
+function gameOver(isWin) {
     gGame.isOn = false
+    var elSpan = document.querySelector('.endgame')
+
+    if (!isWin) {
+        showMines(gBoard)
+        
+    }
+    elSpan.innerText = (isWin) ? "You Win" : "You Lose"
 }
 
 //Done: Show all mines on screen
@@ -177,8 +204,6 @@ function showMines(board) {
                 const elCell = document.querySelector(`[data-i="${i}"][data-j="${j}"]`)
                 elCell.innerText = '*'
             }
-
         }
-
     }
 }
